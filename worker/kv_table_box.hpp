@@ -198,8 +198,6 @@ void KVTableBox<Val>::HandleChunkFinish(const third_party::SArray<Key>& keys, st
   }
   size_t chunk_size = total_val / total_key;
   CHECK_EQ(total_key, keys.size()) << "lost some servers?";
-  std::sort(recv_kvs_.begin(), recv_kvs_.end(),
-            [](const KVPairs<Val>& a, const KVPairs<Val>& b) { return a.keys.front() < b.keys.front(); });
   int idx = 0;
   for (const auto& s : recv_kvs_) {
     int start = 0;
