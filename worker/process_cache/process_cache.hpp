@@ -7,9 +7,9 @@
 #include <boost/noncopyable.hpp>
 #include <glog/logging.h>
 
-#include <petuum_ps/thread/bg_oplog.hpp>
+//#include <petuum_ps/thread/bg_oplog.hpp>
 
-namespace petuum {
+namespace flexps {
 
 struct ChunkRequestInfo {
 public:
@@ -20,11 +20,12 @@ public:
   ChunkRequestInfo() :
     app_thread_id(0),
     clock(0),
-    version(0) {}
+    sent(0) {};
 
   ChunkRequestInfo(const ChunkRequestInfo & other):
     app_thread_id(other.app_thread_id),
-    clock(other.clock) {}
+    clock(other.clock),
+    sent(other.sent) {};
   ChunkRequestInfo & operator=(const ChunkRequestInfo & other) {
     app_thread_id = other.app_thread_id;
     clock = other.clock;
@@ -37,18 +38,18 @@ public:
 
 class SSPChunkRequestMgr {
 public:
-  SSPChunkRequestMgr() {}
+  SSPChunkRequestMgr() {};
 
-  ~SSPChunkRequestMgr() {}
+  ~SSPChunkRequestMgr() {};
 
 
-  bool AddChunkRequest(ChunkRequestInfo &request, int32_t model_id, int32_t chunk_id);
+  bool AddChunkRequest(ChunkRequestInfo &request, int32_t model_id, int32_t chunk_id){return true;};
 
   // Get a list of app thread ids that can be satisfied with this reply.
   // Corresponding row requests are removed upon returning.
   // If all row requests prior to some version are removed, those OpLogs are
   // removed as well.
-  int32_t InformReply(int32_t model_id, int32_t chunk_id, int32_t clock, std::vector<int32_t> *app_thread_ids);
+  int32_t InformReply(int32_t model_id, int32_t chunk_id, int32_t clock, std::vector<int32_t> *app_thread_ids){return 0;};
 
 
 
@@ -63,4 +64,4 @@ private:
 
 };
 
-}  // namespace petuum
+}  // namespace flexps

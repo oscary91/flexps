@@ -33,7 +33,7 @@ class AppBlocker : public AbstractCallbackRunner, public AbstractReceiver {
 
   virtual void AddResponse(uint32_t app_thread_id, uint32_t model_id, Message& msg) override;
 
- private:
+protected:
   void SanityCheck(uint32_t app_thread_id, uint32_t model_id);
 
   std::condition_variable cond_;

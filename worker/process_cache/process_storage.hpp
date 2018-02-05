@@ -3,6 +3,7 @@
 #include <functional>
 #include <boost/noncopyable.hpp>
 #include <base/third_party/sarray.h>
+#include <base/magic.hpp>
 
 namespace flexps {
 
@@ -12,15 +13,15 @@ public:
   struct ChunkInfo {
     third_party::SArray<Val> chunk; 
     int clock;
-  }
-  ProcessStorage();
+  };
+  ProcessStorage(){};
 
-  ~ProcessStorage();
+  ~ProcessStorage(){};
 
-  template <typename Val>
   std::vector<Val> Find(int32_t chunk_id);
-  bool Insert(int32_t chunk_id, std::vector<Val>& chunk);
-  std::vector<int32_t> FindChunkToUpdate(std::vector<int> chunk_ids, int min_clock)
+  bool Insert(third_party::SArray<Key> chunk_ids, third_party::SArray<Val> chunk, int32_t clock){return true;};
+  //std::vector<int32_t> FindChunkToUpdate(std::vector<int> chunk_ids, int min_clock){return chunk_ids;};
+  third_party::SArray<Key> FindChunkToUpdate(third_party::SArray<Key> chunk_ids, int min_clock){return chunk_ids;};
 private:
   //chunk_id -> clock
   std::map<int, int> chunks_clock;

@@ -20,7 +20,7 @@
 #include "server/ssp_model.hpp"
 #include "server/vector_storage.hpp"
 #include "worker/abstract_partition_manager.hpp"
-#include "worker/app_blocker.hpp"
+#include "worker/process_cache/cached_blocker.hpp"
 #include "worker/simple_range_manager.hpp"
 #include "worker/worker_helper_thread.hpp"
 
@@ -83,7 +83,7 @@ class KVEngine {
   // Elements managed by KVEngine
   std::unique_ptr<Sender> sender_;
   // worker elements
-  std::unique_ptr<AppBlocker> app_blocker_;
+  std::unique_ptr<CachedBlocker> app_blocker_;
   std::unique_ptr<WorkerHelperThread> worker_helper_thread_;
   // server elements
   std::unique_ptr<ServerThreadGroup> server_thread_group_;

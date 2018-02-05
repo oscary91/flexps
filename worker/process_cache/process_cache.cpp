@@ -14,7 +14,7 @@ bool SSPChunkRequestMgr::AddChunkRequest(ChunkRequestInfo &request, int32_t mode
       pending_row_requests_.insert(std::make_pair(request_key,
         std::list<ChunkRequestInfo>()));
       VLOG(0) << "pending row requests does not have this model_id = "
-	      << model_id << " chunk_id = " << chunk_id;
+          << model_id << " chunk_id = " << chunk_id;
     }
     std::list<ChunkRequestInfo> &request_list
       = pending_row_requests_[request_key];
@@ -26,11 +26,11 @@ bool SSPChunkRequestMgr::AddChunkRequest(ChunkRequestInfo &request, int32_t mode
       auto iter_prev = std::prev(iter);
       int32_t clock = request.clock;
       if (clock >= iter_prev->clock) {
-	      LOG(INFO) << "I'm requesting clock is " << clock
-		    << " There's a previous request requesting clock "
-		    << iter_prev->clock;
+          LOG(INFO) << "I'm requesting clock is " << clock
+            << " There's a previous request requesting clock "
+            << iter_prev->clock;
         // insert before iter
-	      request.sent = false;
+          request.sent = false;
         request_list.insert(iter, request);
         request_added = true;
         break;
@@ -59,8 +59,8 @@ int32_t SSPChunkRequestMgr::InformReply(int32_t model_id, int32_t row_id,
     } 
     else {
       if (!request.sent) {
-	      clock_to_request = request.clock;
-	      request.sent = true;
+          clock_to_request = request.clock;
+          request.sent = true;
       }
       break;
     }
@@ -71,4 +71,4 @@ int32_t SSPChunkRequestMgr::InformReply(int32_t model_id, int32_t row_id,
   return clock_to_request;
 }
 
-}  // namespace petuum
+}  // namespace flexps
