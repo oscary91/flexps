@@ -14,7 +14,7 @@ namespace flexps {
 
 class Engine {
  public:
-  Engine(const Node& node, const std::vector<Node>& nodes) : node_(node), nodes_(nodes) {}
+  Engine(const Node& node, const std::vector<Node>& nodes, const bool enable_process_cache = false) : node_(node), nodes_(nodes), enable_process_cache_(enable_process_cache) {}
 
   void StartEverything(int num_server_threads_per_node = 1);
 
@@ -54,6 +54,9 @@ class Engine {
   std::unique_ptr<SimpleIdMapper> id_mapper_;
   std::unique_ptr<Mailbox> mailbox_;
   std::unique_ptr<KVEngine> kv_engine_;
+
+  // optionally using process cache
+  bool enable_process_cache_ = false;
 };
 
 template <typename Val>

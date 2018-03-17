@@ -20,6 +20,7 @@
 #include "server/ssp_model.hpp"
 #include "server/vector_storage.hpp"
 #include "worker/abstract_partition_manager.hpp"
+#include "worker/app_blocker.hpp"
 #include "worker/process_cache/cached_blocker.hpp"
 #include "worker/simple_range_manager.hpp"
 #include "worker/worker_helper_thread.hpp"
@@ -29,6 +30,8 @@
 #include "server/sparsessp/sparse_ssp_model.hpp"
 #include "server/sparsessp/unordered_map_sparse_ssp_recorder.hpp"
 #include "server/sparsessp/vector_sparse_ssp_recorder.hpp"
+
+#include "gflags/gflags.h"
 
 namespace flexps {
 
@@ -42,8 +45,8 @@ enum class SparseSSPRecorderType { None, Map, Vector };
 class KVEngine {
  public:
   KVEngine(const Node& node, const std::vector<Node>& nodes, 
-          SimpleIdMapper* const id_mapper, Mailbox* const mailbox) 
-      : node_(node), nodes_(nodes), id_mapper_(id_mapper), mailbox_(mailbox) {}
+          SimpleIdMapper* const id_mapper, Mailbox* const mailbox, const bool enable_process_cache) 
+      : node_(node), nodes_(nodes), id_mapper_(id_mapper), mailbox_(mailbox), enable_process_cache_(enable_process_cache) {}
 
   void StartKVEngine(int num_server_threads_per_node = 1);
   void StartServerThreads();
@@ -83,10 +86,13 @@ class KVEngine {
   // Elements managed by KVEngine
   std::unique_ptr<Sender> sender_;
   // worker elements
-  std::unique_ptr<CachedBlocker> app_blocker_;
+  std::unique_ptr<AppBlocker> app_blocker_;
+  std::unique_ptr<CachedBlocker> cached_blocker_;
   std::unique_ptr<WorkerHelperThread> worker_helper_thread_;
   // server elements
   std::unique_ptr<ServerThreadGroup> server_thread_group_;
+  // optionally using process cache
+  bool enable_process_cache_ = true;
 };
 
 template <typename Val>

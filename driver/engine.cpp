@@ -19,7 +19,7 @@ void Engine::StartEverything(int num_server_thread_per_node) {
   VLOG(1) << "mailbox starts on node" << node_.id;
 
   // Start KVEngine
-  kv_engine_.reset(new KVEngine(node_, nodes_, id_mapper_.get(), mailbox_.get()));
+  kv_engine_.reset(new KVEngine(node_, nodes_, id_mapper_.get(), mailbox_.get(), enable_process_cache_));
   kv_engine_->StartKVEngine();
 
   // Barrier

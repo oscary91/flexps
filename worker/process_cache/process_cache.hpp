@@ -43,13 +43,13 @@ public:
   ~SSPChunkRequestMgr() {};
 
 
-  bool AddChunkRequest(ChunkRequestInfo &request, int32_t model_id, int32_t chunk_id){return true;};
+  bool AddChunkRequest(ChunkRequestInfo &request, int32_t model_id, int32_t chunk_id);
 
   // Get a list of app thread ids that can be satisfied with this reply.
   // Corresponding row requests are removed upon returning.
   // If all row requests prior to some version are removed, those OpLogs are
   // removed as well.
-  int32_t InformReply(int32_t model_id, int32_t chunk_id, int32_t clock, std::vector<int32_t> *app_thread_ids){return 0;};
+  int32_t InformReply(int32_t model_id, int32_t chunk_id, int32_t clock, std::vector<int32_t> *app_thread_ids);
 
 
 

@@ -24,9 +24,17 @@ void KVEngine::StartWorkerHelperThreads() {
   CHECK(mailbox_);
   auto worker_helper_thread_ids = id_mapper_->GetWorkerHelperThreadsForId(node_.id);
   CHECK_EQ(worker_helper_thread_ids.size(), 1);
-  app_blocker_.reset(new CachedBlocker());
-  app_blocker_->RegisterSenderqueue(sender_->GetMessageQueue());
-  worker_helper_thread_.reset(new WorkerHelperThread(worker_helper_thread_ids[0], app_blocker_.get()));
+  if (enable_process_cache_)
+  {
+    cached_blocker_.reset(new CachedBlocker());
+    cached_blocker_->RegisterSenderqueue(sender_->GetMessageQueue());
+    worker_helper_thread_.reset(new WorkerHelperThread(worker_helper_thread_ids[0], cached_blocker_.get()));
+  }
+  else
+  {  
+    app_blocker_.reset(new AppBlocker());
+    worker_helper_thread_.reset(new WorkerHelperThread(worker_helper_thread_ids[0], app_blocker_.get()));
+  }
   mailbox_->RegisterQueue(worker_helper_thread_->GetHelperId(), worker_helper_thread_->GetWorkQueue());
   worker_helper_thread_->Start();
   VLOG(1) << "worker_helper_thread:" << worker_helper_thread_ids[0] << " starts on node:" << node_.id;
@@ -165,9 +173,17 @@ void KVEngine::Run(const MLTask& task) {
       info.local_id = i;
       info.thread_id = local_threads[i];
       info.worker_id = local_workers[i];
-      info.send_queue = worker_helper_thread_->GetWorkQueue();
       info.partition_manager_map = partition_manager_map;
-      info.callback_runner = app_blocker_.get();
+      if (enable_process_cache_)
+      {
+        info.send_queue = worker_helper_thread_->GetWorkQueue();
+        info.callback_runner = cached_blocker_.get();
+      }
+      else
+      {
+        info.send_queue = sender_->GetMessageQueue();
+        info.callback_runner = app_blocker_.get();
+      }
       info.mailbox = mailbox_;
       thread_group[i] = std::thread([&task, info]() { task.RunLambda(info); });
     }
